@@ -4,11 +4,12 @@
   "description": "A comprehensive web application for milk retailers to manage customer deliveries, billing, and daily operations efficiently.",
   "main": "src/index.html",
   "scripts": {
-    "dev": "npx serve src -p 3000",
-    "start": "npx serve src",
-    "build": "echo 'No build step required for vanilla JS app'",
-    "deploy": "echo 'Upload src/ folder contents to your hosting provider'"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
   "keywords": [
     "milk",
     "dairy",
@@ -26,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/milk-retailer-management.git"
+    "url": "https://github.com/Dharmik200817/lovable-milk-manager.git"
   },
   "bugs": {
     "url": "https://github.com/your-username/milk-retailer-management/issues"
   },
-  "homepage": "https://github.com/your-username/milk-retailer-management#readme",
+  "homepage": "https://dharmik200817.github.io/lovable-milk-manager/",
   "engines": {
     "node": ">=14.0.0"
   }
