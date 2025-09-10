@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "A comprehensive web application for milk retailers to manage customer deliveries, billing, and daily operations efficiently.",
   "main": "src/index.html",
-  "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
+"scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
 },
   "keywords": [
     "milk",
@@ -23,7 +23,8 @@
   "author": "Milk Retailer Management Team",
   "license": "MIT",
   "devDependencies": {
-    "serve": "^14.2.1"
+    "serve": "^14.2.1",
+    "gh-pages": "^6.3.0"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/Dharmik200817/lovable-milk-manager/issues"
   },
-  "homepage": "https://dharmik200817.github.io/lovable-milk-manager/",
+  "homepage": "https://Dharmik200817.github.io/lovable-milk-manager/",
   "engines": {
     "node": ">=14.0.0"
   }
