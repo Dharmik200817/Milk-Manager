@@ -1,0 +1,38 @@
+{
+  "name": "milk-retailer-management",
+  "version": "1.0.0",
+  "description": "A comprehensive web application for milk retailers to manage customer deliveries, billing, and daily operations efficiently.",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "npx serve src -p 3000",
+    "start": "npx serve src",
+    "build": "echo 'No build step required for vanilla JS app'",
+    "deploy": "echo 'Upload src/ folder contents to your hosting provider'"
+  },
+  "keywords": [
+    "milk",
+    "dairy",
+    "retailer",
+    "management",
+    "delivery",
+    "billing",
+    "supabase",
+    "pwa"
+  ],
+  "author": "Milk Retailer Management Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/milk-retailer-management.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/milk-retailer-management/issues"
+  },
+  "homepage": "https://github.com/your-username/milk-retailer-management#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

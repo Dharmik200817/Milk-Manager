@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narmada Dairy Milk Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-cow"></i>
+                    <h1>Narmada Dairy Milk Management</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="date-display">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div class="dashboard-section">
+                <h2 class="section-title">Dashboard</h2>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="todayRevenue">₹0</h3>
+                            <p>Today's Revenue</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon deliveries">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="todayDeliveries">0</h3>
+                            <p>Today's Deliveries</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon quantity">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="todayQuantity">0L</h3>
+                            <p>Milk Delivered</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon customers">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalCustomers">0</h3>
+                            <p>Total Customers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('delivery')">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Delivery</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('customers')">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Customer</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('billing')">
+                            <i class="fas fa-receipt"></i>
+                            <span>Generate Bill</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('reports')">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>View Reports</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Deliveries -->
+                <div class="recent-deliveries">
+                    <h3>Recent Deliveries</h3>
+                    <div class="deliveries-list" id="recentDeliveriesList">
+                        <div class="loading-message">Loading dashboard data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Section -->
+            <div class="section-content" id="delivery-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-truck"></i> Delivery Entry</h2>
+                    <button class="btn-back" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <form id="deliveryForm" class="delivery-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerSelect">Customer</label>
+                                    <select id="customerSelect" required>
+                                        <option value="">Select Customer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="milkTypeSelect">Milk Type</label>
+                                    <select id="milkTypeSelect" required>
+                                        <option value="">Select Milk Type</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryDate">Date</label>
+                                    <input type="date" id="deliveryDate" required>
+                                </div>
+                            </div>
+                            
+                            <div class="quantity-section">
+                                <label>Quantity</label>
+                                <div class="quick-quantity-buttons">
+                                    <button type="button" class="qty-btn" data-qty="0.5">500ml</button>
+                                    <button type="button" class="qty-btn" data-qty="1">1L</button>
+                                    <button type="button" class="qty-btn" data-qty="1.5">1.5L</button>
+                                    <button type="button" class="qty-btn" data-qty="2">2L</button>
+                                </div>
+                                <input type="number" id="quantityInput" step="0.1" min="0" placeholder="Enter quantity (L)" required>
+                            </div>
+
+                            <div class="extra-items-section">
+                                <div class="form-group">
+                                    <label for="extraItems">Extra Items (Optional)</label>
+                                    <input type="text" id="extraItems" placeholder="e.g., butter, paneer, curd">
+                                </div>
+                                <div class="form-group">
+                                    <label for="extraAmount">Extra Amount (₹)</label>
+                                    <input type="number" id="extraAmount" step="0.01" min="0" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Add Entry
+                                </button>
+                                <button type="button" id="repeatLastEntry" class="btn btn-secondary">
+                                    <i class="fas fa-repeat"></i> Repeat Last Entry
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Today's Deliveries -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Today's Deliveries</h3>
+                        <input type="text" id="deliverySearch" placeholder="Search deliveries..." class="search-input">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table id="deliveriesTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Milk Type</th>
+                                        <th>Quantity</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                        <th>Extra Items</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Delivery entries will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Section -->
+            <div class="section-content" id="customers-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Customer Management</h2>
+                    <button class="btn-back" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Add New Customer</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="customerForm" class="customer-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerName">Customer Name</label>
+                                    <input type="text" id="customerName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customerPhone">Phone Number</label>
+                                    <input type="tel" id="customerPhone">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerAddress">Address</label>
+                                <textarea id="customerAddress" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Add Customer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Customer List</h3>
+                        <input type="text" id="customerSearch" placeholder="Search customers..." class="search-input">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table id="customersTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Total Orders</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Customer entries will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Section -->
+            <div class="section-content" id="billing-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-receipt"></i> Billing</h2>
+                    <button class="btn-back" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <form id="billingForm" class="billing-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="billCustomerSelect">Customer</label>
+                                    <select id="billCustomerSelect" required>
+                                        <option value="">Select Customer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="billFromDate">From Date</label>
+                                    <input type="date" id="billFromDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="billToDate">To Date</label>
+                                    <input type="date" id="billToDate" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-file-invoice"></i> Generate Bill
+                            </button>
+                        </form>
+                        
+                        <div id="billPreview" class="bill-preview" style="display: none;">
+                            <!-- Bill content will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="section-content" id="reports-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Reports</h2>
+                    <button class="btn-back" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="report-filters">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="reportFromDate">From Date</label>
+                                    <input type="date" id="reportFromDate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reportToDate">To Date</label>
+                                    <input type="date" id="reportToDate">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" onclick="generateReport()">
+                                        <i class="fas fa-search"></i> Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="reportResults" class="report-results">
+                            <!-- Report results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
