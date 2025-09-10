@@ -4,17 +4,6 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/lovable-milk-manager/',
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    // Ensures relative paths are used in the final build.
-    rollupOptions: {
-      output: {
-        entryFileNames: `assets/[name]-[hash].js`,
-        chunkFileNames: `assets/[name]-[hash].js`,
-        assetFileNames: `assets/[name]-[hash].[ext]`
-      }
-    }
-  }
+  // The base must match your repository name for GitHub Pages to work.
+  base: '/lovable-milk-manager/'
 });
