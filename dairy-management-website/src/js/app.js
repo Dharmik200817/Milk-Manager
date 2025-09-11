@@ -7,6 +7,7 @@ class DairyManagementApp {
         this.customers = [];
         this.milkTypes = [];
         this.deliveries = [];
+    this.bills = [];
         this.lastEntry = null;
         this.supabase = null;
         
@@ -49,6 +50,8 @@ class DairyManagementApp {
             // Load customers and deliveries
             await this.loadCustomers();
             await this.loadDeliveries();
+            // Load bills (for previous/ pending balances)
+            await this.loadBills();
             
         } catch (error) {
             console.error('Error loading initial data:', error);
@@ -372,8 +375,12 @@ class DairyManagementApp {
             const extraTotal = billDeliveries.reduce((sum, d) => sum + (d.extra_amount || 0), 0);
             const grandTotal = subtotal + extraTotal;
 
-            // Generate bill HTML
-            const billHTML = this.generateBillHTML(customer, billDeliveries, fromDate, toDate, subtotal, extraTotal, grandTotal);
+            // Compute previous pending balance for this customer before fromDate
+            const prevPending = this.getPreviousPendingBalance(customerId, fromDate);
+            const finalTotal = grandTotal + prevPending;
+
+            // Generate bill HTML (pass prev and final total)
+            const billHTML = this.generateBillHTML(customer, billDeliveries, fromDate, toDate, subtotal, extraTotal, grandTotal, prevPending, finalTotal);
             
             // Show bill preview
             const billPreview = document.getElementById('billPreview');
@@ -419,7 +426,7 @@ class DairyManagementApp {
             }
         });
 
-        return `
+    return `
             <div class="bill-header">
                 <div>
                     <h2>Narmada Dairy</h2>
@@ -463,9 +470,22 @@ class DairyManagementApp {
                         <span>Extra Items:</span>
                         <span>₹${extraTotal.toFixed(2)}</span>
                     </div>
+                    <!-- Previous pending balance (passed from generateBill) -->
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span>₹${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Extra Items:</span>
+                        <span>₹${extraTotal.toFixed(2)}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Previous Balance (pending):</span>
+                        <span>₹${(arguments[7] || 0).toFixed(2)}</span>
+                    </div>
                     <div class="total-row final-total">
-                        <span><strong>Total:</strong></span>
-                        <span><strong>₹${grandTotal.toFixed(2)}</strong></span>
+                        <span><strong>Final Total (incl. previous):</strong></span>
+                        <span><strong>₹${(arguments[8] || 0).toFixed(2)}</strong></span>
                     </div>
                 </div>
             </div>
@@ -535,6 +555,25 @@ class DairyManagementApp {
         } catch (error) {
             console.error('Error loading deliveries:', error);
             this.deliveries = [];
+        }
+    }
+
+    async loadBills() {
+        try {
+            if (this.supabase) {
+                const { data, error } = await this.supabase
+                    .from('bills')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                this.bills = data || [];
+            } else {
+                this.bills = JSON.parse(localStorage.getItem('bills') || '[]');
+            }
+        } catch (error) {
+            console.error('Error loading bills:', error);
+            this.bills = [];
         }
     }
 
@@ -612,6 +651,47 @@ class DairyManagementApp {
             }
         } catch (error) {
             console.error('Error adding delivery:', error);
+            throw error;
+        }
+    }
+
+    getPreviousPendingBalance(customerId, fromDate) {
+        let prev = 0;
+        try {
+            const fDate = new Date(fromDate);
+            this.bills.forEach(b => {
+                if ((b.customer_id == customerId || String(b.customer_id) == String(customerId)) && b.status !== 'cleared') {
+                    const billEnd = new Date(b.end_date);
+                    if (billEnd < fDate) {
+                        prev += parseFloat(b.total_amount || 0);
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Error computing previous pending balance:', e);
+        }
+        return prev;
+    }
+
+    async saveBill(billData) {
+        try {
+            if (this.supabase) {
+                const { data, error } = await this.supabase
+                    .from('bills')
+                    .insert([billData])
+                    .select()
+                    .single();
+                if (error) throw error;
+                this.bills.unshift(data);
+                return data;
+            } else {
+                billData.id = Date.now();
+                this.bills.unshift(billData);
+                localStorage.setItem('bills', JSON.stringify(this.bills));
+                return billData;
+            }
+        } catch (error) {
+            console.error('Error saving bill:', error);
             throw error;
         }
     }
