@@ -1,15 +1,30 @@
+
 {
-  "name": "milk-retailer-management",
+  "name": "lovable-milk-manager",
   "version": "1.0.0",
-  "description": "A comprehensive web application for milk retailers to manage customer deliveries, billing, and daily operations efficiently.",
-  "main": "src/index.html",
+  "description": "A comprehensive dairy retailer management website built with Vite and Supabase, designed to streamline milk delivery, billing, and customer management processes.",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.35.0",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.3.3",
+    "chart.js": "^4.3.0",
+    "dayjs": "^1.11.9",
+    "file-saver": "^2.0.5",
+    "jspdf": "^2.5.1",
+    "pwa-asset-generator": "^5.0.3",
+    "sweetalert2": "^11.7.12"
+  },
 "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
-},
+  "dev": "vite",
+  "build": "vite build",
+  "build:dev": "vite build --mode development",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "deploy": "gh-pages -d dist"
+}
+,
   "keywords": [
     "milk",
     "dairy",
