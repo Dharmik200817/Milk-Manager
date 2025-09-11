@@ -192,7 +192,21 @@ class DairyManagementApp {
         try {
             const customerId = document.getElementById('customerSelect').value;
             const milkTypeId = document.getElementById('milkTypeSelect').value;
-            const quantity = parseFloat(document.getElementById('quantityInput').value);
+            // Normalize quantity input: accept plain numbers (L), numbers with 'ml', or large numbers in ml
+            let rawQty = (document.getElementById('quantityInput').value || '').toString().trim();
+            let quantity = 0;
+            if (/^\d+(\.?\d*)\s*ml$/i.test(rawQty)) {
+                // e.g. '7500ml' or '7500 ml'
+                quantity = parseFloat(rawQty.replace(/[^0-9.]/g, ''))/1000;
+            } else if (/^\d+(\.?\d*)\s*l$/i.test(rawQty)) {
+                quantity = parseFloat(rawQty.replace(/[^0-9.]/g, ''));
+            } else {
+                quantity = parseFloat(rawQty);
+                // if user entered a large integer like 7500, it's likely ml -> convert
+                if (!isNaN(quantity) && quantity >= 1000) {
+                    quantity = quantity / 1000;
+                }
+            }
             const extraItems = document.getElementById('extraItems').value;
             const extraAmount = parseFloat(document.getElementById('extraAmount').value) || 0;
             const date = document.getElementById('deliveryDate').value;
@@ -254,7 +268,7 @@ class DairyManagementApp {
 
     selectQuantity(qty) {
         // Update input
-        document.getElementById('quantityInput').value = qty;
+    document.getElementById('quantityInput').value = qty;
         
         // Update button states
         document.querySelectorAll('.qty-btn').forEach(btn => {
@@ -273,7 +287,8 @@ class DairyManagementApp {
         // Fill form with last entry data
         document.getElementById('customerSelect').value = this.lastEntry.customer_id;
         document.getElementById('milkTypeSelect').value = this.lastEntry.milk_type_id;
-        document.getElementById('quantityInput').value = this.lastEntry.quantity;
+    // ensure lastEntry.quantity is shown in liters
+    document.getElementById('quantityInput').value = this.lastEntry.quantity;
         document.getElementById('extraItems').value = this.lastEntry.extra_items || '';
         document.getElementById('extraAmount').value = this.lastEntry.extra_amount || '';
         

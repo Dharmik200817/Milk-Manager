@@ -189,7 +189,16 @@ class DairyManagementApp {
         try {
             const customerId = document.getElementById('customerSelect').value;
             const milkTypeId = document.getElementById('milkTypeSelect').value;
-            const quantity = parseFloat(document.getElementById('quantityInput').value);
+            let rawQty = (document.getElementById('quantityInput').value || '').toString().trim();
+            let quantity = 0;
+            if (/^\d+(\.?\d*)\s*ml$/i.test(rawQty)) {
+                quantity = parseFloat(rawQty.replace(/[^0-9.]/g, ''))/1000;
+            } else if (/^\d+(\.?\d*)\s*l$/i.test(rawQty)) {
+                quantity = parseFloat(rawQty.replace(/[^0-9.]/g, ''));
+            } else {
+                quantity = parseFloat(rawQty);
+                if (!isNaN(quantity) && quantity >= 1000) quantity = quantity/1000;
+            }
             const extraItems = document.getElementById('extraItems').value;
             const extraAmount = parseFloat(document.getElementById('extraAmount').value) || 0;
             const date = document.getElementById('deliveryDate').value;
