@@ -23,6 +23,15 @@ jobs:
       - name: Build
         run: npm run build --if-present -- --base /lovable-milk-manager/
 
+      - name: Prepare SPA fallback and favicon
+        run: |
+          # copy index for SPA client-side routing fallback
+          cp dist/index.html dist/404.html
+          # if we have a base64 favicon, decode it to dist
+          if [ -f public/favicon.base64 ]; then
+            base64 -d public/favicon.base64 > dist/favicon.png || true
+          fi
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
